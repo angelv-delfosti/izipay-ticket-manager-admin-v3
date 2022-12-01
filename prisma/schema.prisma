@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  username   String
+  email      String
+  password   String
+  status     Boolean
+  created_at DateTime   @default(now())
+  update_at  DateTime   @updatedAt
+  role       Role
+  activity   Activity[]
+}
+
+model Activity {
+  id           Int      @id @default(autoincrement())
+  session_time Int
+  description  String
+  date_init    DateTime
+  date_finish  DateTime
+  user_id      Int
+  user         User     @relation(fields: [user_id], references: [id])
+  ticket_id    Int
+  ticket       Ticket   @relation(fields: [ticket_id], references: [id])
+}
+
+model Ticket {
+  id             Int           @id @default(autoincrement())
+  name           String
+  code           String
+  admission_date DateTime
+  type_customer  Type_customer
+  platform       String
+  status         Int
+  created_at     DateTime      @default(now())
+  update_at      DateTime      @updatedAt
+  activity       Activity[]
+}
+
+enum Type_customer {
+  ggee
+  massive
+}
+
+enum Role {
+  admin
+  visitor
+}
