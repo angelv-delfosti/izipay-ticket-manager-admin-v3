@@ -13,13 +13,19 @@ datasource db {
 model User {
   id         Int        @id @default(autoincrement())
   username   String
-  email      String
+  email      String     @unique
   password   String
   status     Boolean
   created_at DateTime   @default(now())
   update_at  DateTime   @updatedAt
   role       Role
   activity   Activity[]
+}
+
+enum Role {
+  operator
+  admin
+  visitor
 }
 
 model Activity {
@@ -35,16 +41,18 @@ model Activity {
 }
 
 model Ticket {
-  id             Int           @id @default(autoincrement())
-  name           String
-  code           String
-  admission_date DateTime
-  type_customer  Type_customer
-  platform       String
-  status         Int
-  created_at     DateTime      @default(now())
-  update_at      DateTime      @updatedAt
-  activity       Activity[]
+  id              Int           @id @default(autoincrement())
+  name            String
+  admission_date  DateTime
+  type_customer   Type_customer
+  platform        String
+  status          Int
+  production_date DateTime
+  type_ticket     Type_ticket
+  created_at      DateTime      @default(now())
+  update_at       DateTime      @updatedAt
+  activity        Activity[]
+  ticket_date     ticket_date[]
 }
 
 enum Type_customer {
@@ -52,7 +60,34 @@ enum Type_customer {
   massive
 }
 
-enum Role {
-  admin
-  visitor
+enum Type_ticket {
+  entry
+  reentry
+  postsale
+  returned
 }
+
+model ticket_date {
+  id            Int      @id @default(autoincrement())
+  date_init     DateTime
+  date_complete DateTime
+  date_cancel   DateTime
+  date_standby  DateTime
+  created_at    DateTime @default(now())
+  update_at     DateTime @updatedAt
+  ticket_id     Int
+  ticket        Ticket   @relation(fields: [ticket_id], references: [id])
+}
+
+// model customer {
+//   id            Int      @id @default(autoincrement())
+//   fullname      String
+//   email         String
+//   phone         String
+//   contact       String
+//   business_name String
+//   business_ruc  String
+//   status        String
+//   created_at    DateTime @default(now())
+//   update_at     DateTime @updatedAt
+// }
