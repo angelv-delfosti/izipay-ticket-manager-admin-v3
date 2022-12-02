@@ -53,6 +53,8 @@ model Ticket {
   update_at       DateTime      @updatedAt
   activity        Activity[]
   ticket_date     ticket_date[]
+  customer_id     Int
+  customer        Customer      @relation(fields: [customer_id], references: [id])
 }
 
 enum Type_customer {
@@ -79,15 +81,16 @@ model ticket_date {
   ticket        Ticket   @relation(fields: [ticket_id], references: [id])
 }
 
-// model customer {
-//   id            Int      @id @default(autoincrement())
-//   fullname      String
-//   email         String
-//   phone         String
-//   contact       String
-//   business_name String
-//   business_ruc  String
-//   status        String
-//   created_at    DateTime @default(now())
-//   update_at     DateTime @updatedAt
-// }
+model Customer {
+  id            Int      @id @default(autoincrement())
+  fullname      String
+  email         String
+  phone         String
+  contact       String
+  business_name String
+  business_ruc  String
+  status        String
+  created_at    DateTime @default(now())
+  update_at     DateTime @updatedAt
+  Ticket        Ticket[]
+}
