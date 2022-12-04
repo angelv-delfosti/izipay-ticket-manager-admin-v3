@@ -110,24 +110,27 @@ model Status {
 }
 
 model Task_status {
-  id         Int        @id @default(autoincrement())
-  name       String
-  created_at DateTime   @default(now())
-  update_at  DateTime   @updatedAt
-  Activity   Activity[]
-  reason     String
+  id            Int             @id @default(autoincrement())
+  name          String
+  created_at    DateTime        @default(now())
+  update_at     DateTime        @updatedAt
+  Activity      Activity[]
+  reason        String
+  Ticket_status Ticket_status[]
 }
 
 model Ticket_status {
-  id          Int      @id @default(autoincrement())
-  ticket_id   Int
-  ticket      Ticket   @relation(fields: [ticket_id], references: [id])
-  status_id   Int
-  status      Status   @relation(fields: [status_id], references: [id])
-  description String
-  reason      String
-  created_at  DateTime @default(now())
-  update_at   DateTime @updatedAt
+  id             Int         @id @default(autoincrement())
+  ticket_id      Int
+  ticket         Ticket      @relation(fields: [ticket_id], references: [id])
+  status_id      Int
+  status         Status      @relation(fields: [status_id], references: [id])
+  task_status_id Int
+  tast_status    Task_status @relation(fields: [task_status_id], references: [id])
+  description    String
+  reason         String
+  created_at     DateTime    @default(now())
+  update_at      DateTime    @updatedAt
 }
 
 model Type_development {
