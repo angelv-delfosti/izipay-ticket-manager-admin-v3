@@ -29,19 +29,21 @@ enum Role {
 }
 
 model Activity {
-  id           Int      @id @default(autoincrement())
-  session_time Int
-  description  String
-  date_init    DateTime
-  date_finish  DateTime
-  user_id      Int
-  user         User     @relation(fields: [user_id], references: [id])
-  ticket_id    Int
-  ticket       Ticket   @relation(fields: [ticket_id], references: [id])
+  id             Int         @id @default(autoincrement())
+  session_time   Int
+  description    String
+  date_init      DateTime
+  date_finish    DateTime
+  user_id        Int
+  user           User        @relation(fields: [user_id], references: [id])
+  ticket_id      Int
+  ticket         Ticket      @relation(fields: [ticket_id], references: [id])
+  task_status_id Int
+  tast_status    Task_status @relation(fields: [task_status_id], references: [id])
 }
 
 model Ticket {
-  id              Int           @id @default(autoincrement())
+  id              Int             @id @default(autoincrement())
   name            String
   admission_date  DateTime
   type_customer   Type_customer
@@ -49,12 +51,13 @@ model Ticket {
   status          Int
   production_date DateTime
   type_ticket     Type_ticket
-  created_at      DateTime      @default(now())
-  update_at       DateTime      @updatedAt
+  created_at      DateTime        @default(now())
+  update_at       DateTime        @updatedAt
   activity        Activity[]
   ticket_date     ticket_date[]
   customer_id     Int
-  customer        Customer      @relation(fields: [customer_id], references: [id])
+  customer        Customer        @relation(fields: [customer_id], references: [id])
+  ticket_status   Ticket_status[]
 }
 
 enum Type_customer {
@@ -87,10 +90,41 @@ model Customer {
   email         String
   phone         String
   contact       String
+  code          Int
   business_name String
   business_ruc  String
   status        String
   created_at    DateTime @default(now())
   update_at     DateTime @updatedAt
   Ticket        Ticket[]
+}
+
+model Status {
+  id            Int             @id @default(autoincrement())
+  name          String
+  description   String
+  created_at    DateTime        @default(now())
+  update_at     DateTime        @updatedAt
+  Ticket_status Ticket_status[]
+}
+
+model Task_status {
+  id         Int        @id @default(autoincrement())
+  name       String
+  created_at DateTime   @default(now())
+  update_at  DateTime   @updatedAt
+  Activity   Activity[]
+  reason     String
+}
+
+model Ticket_status {
+  id          Int      @id @default(autoincrement())
+  ticket_id   Int
+  ticket      Ticket   @relation(fields: [ticket_id], references: [id])
+  status_id   Int
+  status      Status   @relation(fields: [status_id], references: [id])
+  description String
+  reason      String
+  created_at  DateTime @default(now())
+  update_at   DateTime @updatedAt
 }
