@@ -58,6 +58,7 @@ model Ticket {
   customer_id     Int
   customer        Customer        @relation(fields: [customer_id], references: [id])
   ticket_status   Ticket_status[]
+  Ticket_detail   Ticket_detail[]
 }
 
 enum Type_customer {
@@ -127,4 +128,28 @@ model Ticket_status {
   reason      String
   created_at  DateTime @default(now())
   update_at   DateTime @updatedAt
+}
+
+model Type_development {
+  id                  Int                 @id @default(autoincrement())
+  name                String
+  description         String
+  type_implementation Type_implementation
+  created_at          DateTime            @default(now())
+  update_at           DateTime            @updatedAt
+  Ticket_detail       Ticket_detail[]
+}
+
+enum Type_implementation {
+  cms
+  code
+  shop
+}
+
+model Ticket_detail {
+  id                  Int              @id @default(autoincrement())
+  type_development_id Int
+  type_development    Type_development @relation(fields: [type_development_id], references: [id])
+  ticket_id           Int
+  ticket              Ticket           @relation(fields: [ticket_id], references: [id])
 }
